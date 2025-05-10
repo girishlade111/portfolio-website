@@ -1,0 +1,1 @@
+npm install typescript webpack webpack-cli sass-loader css-loader sass ts-loader three gsap scrollmagic

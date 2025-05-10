@@ -1,0 +1,11 @@
+// Masonry Grid
+.projects-grid {
+  column-count: 3;
+  column-gap: 20px;
+  
+  .project-card {
+    break-inside: avoid;
+    transition: transform 0.3s;
+    &:hover { transform: translateY(-10px); }
+  }
+}
