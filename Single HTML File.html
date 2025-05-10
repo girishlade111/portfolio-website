@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modern Portfolio</title>
+  <meta name="description" content="Modern Portfolio Website with Particle Effects, Scroll Animations, and Theme Toggle" />
+
+  <!-- Particles.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js @2.0.0/particles.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter :wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css ">
+
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      background-color: #f9f9f9;
+      color: #333;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-theme {
+      background-color: #1a1a1a;
+      color: #f9f9f9;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+    }
+
+    /* Cursor */
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 16px;
+      height: 16px;
+      background: #6e8efb;
+      border-radius: 50%;
+      pointer-events: none;
+      mix-blend-mode: difference;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s ease, height 0.2s ease;
+    }
+
+    .custom-cursor.hover {
+      width: 40px;
+      height: 40px;
+      background: #a777e3;
+    }
+
+    /* Navbar */
+    .glass-navbar {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+    }
+
+    .nav-links a {
+      margin: 0 1rem;
+      position: relative;
+      padding-bottom: 4px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #6e8efb, #a777e3);
+      transition: transform 0.3s ease;
+      transform: scaleX(1);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #6e8efb, #a777e3);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #6e8efb;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    #particles-js {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .animated-title {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: fadeInUp 2s ease-out;
+    }
+
+    .cta-button {
+      padding: 0.8rem 2rem;
+      background: linear-gradient(45deg, #6e8efb, #a777e3);
+      border: none;
+      color: white;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .cta-button:hover {
+      transform: scale(1.05);
+    }
+
+    /* About */
+    .about-section {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 4rem 2rem;
+      gap: 2rem;
+    }
+
+    .about-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .about-image img {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #6e8efb;
+    }
+
+    .about-content {
+      flex: 1;
+      max-width: 600px;
+    }
+
+    .timeline {
+      margin-top: 2rem;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      width: 10px;
+      height: 10px;
+      background: #6e8efb;
+      border-radius: 50%;
+    }
+
+    /* Projects */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .project-card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .project-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .project-card h3 {
+      padding: 1rem;
+    }
+
+    .filter-buttons {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .filter-buttons button {
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #eaeaea;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .filter-buttons button.active {
+      background: linear-gradient(45deg, #6e8efb, #a777e3);
+      color: white;
+    }
+
+    /* Skills */
+    .skills-section {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .skill-ring {
+      display: inline-block;
+      margin: 1rem;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(#6e8efb 0%, #6e8efb 70%, #eaeaea 70%, #eaeaea 100%);
+      position: relative;
+    }
+
+    .skill-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* Contact */
+    .contact-section {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .contact-form {
+      max-width: 600px;
+      margin: 2rem auto;
+      position: relative;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-group label {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      pointer-events: none;
+      transition: 0.3s ease all;
+    }
+
+    .form-group input:focus + label,
+    .form-group input:not(:placeholder-shown) + label {
+      top: -0.5rem;
+      left: 0.5rem;
+      font-size: 0.8rem;
+      background: white;
+      padding: 0 0.3rem;
+    }
+
+    .send-button {
+      background: linear-gradient(45deg, #6e8efb, #a777e3);
+      color: white;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .send-button::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 50%;
+      left: 50%;
+      margin-top: -8px;
+      margin-left: -8px;
+      border: 3px solid white;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      display: none;
+      animation: spin 1s infinite linear;
+    }
+
+    .thank-you {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .thank-you.visible {
+      opacity: 1;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Blog */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .blog-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .blog-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .blog-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .blog-card:hover .blog-overlay {
+      opacity: 1;
+    }
+
+    .blog-title {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #eaeaea;
+      font-size: 0.9rem;
+    }
+
+    .social-icons a {
+      margin: 0 0.5rem;
+      color: #6e8efb;
+      transition: color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      color: #a777e3;
+    }
+
+    /* Scroll Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .glass-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        margin-top: 1rem;
+      }
+
+      .nav-links a {
+        margin: 0.5rem 0;
+      }
+    }
+  </style>
+</head>
+
+<body class="light-theme">
+
+  <!-- Custom Cursor -->
+  <div class="custom-cursor"></div>
+
+  <!-- Navigation -->
+  <header class="glass-navbar">
+    <div class="nav-links" id="nav-links">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#contact" class="nav-link">Contact</a>
+      <a href="#blog" class="nav-link">Blog</a>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div id="particles-js"></div>
+    <div class="hero-content">
+      <h1 class="animated-title fade-in">Hi, I'm Alex</h1>
+      <button class="cta-button">View Work</button>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about-section fade-in">
+    <div class="about-image">
+      <img src="https://via.placeholder.com/200 " alt="Profile Picture" />
+    </div>
+    <div class="about-content">
+      <h2>About Me</h2>
+      <p>I'm a passionate web developer with over 5 years of experience building beautiful and functional websites.</p>
+      <div class="timeline">
+        <div class="timeline-item"><strong>2020:</strong> Started freelancing</div>
+        <div class="timeline-item"><strong>2022:</strong> Joined Tech Corp as Frontend Developer</div>
+        <div class="timeline-item"><strong>2024:</strong> Founded MyDev Studio</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="fade-in">
+    <div class="filter-buttons">
+      <button class="active" onclick="filterProjects('all')">All</button>
+      <button onclick="filterProjects('web')">Web Design</button>
+      <button onclick="filterProjects('apps')">Apps</button>
+    </div>
+    <div class="projects-grid" id="projects-grid">
+      <div class="project-card" data-category="web">
+        <img src="https://via.placeholder.com/400x200 " alt="Project 1" />
+        <h3>E-Commerce Site</h3>
+      </div>
+      <div class="project-card" data-category="apps">
+        <img src="https://via.placeholder.com/400x200 " alt="Project 2" />
+        <h3>Mobile App UI</h3>
+      </div>
+      <div class="project-card" data-category="web">
+        <img src="https://via.placeholder.com/400x200 " alt="Project 3" />
+        <h3>Portfolio Website</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="skills-section fade-in">
+    <h2>Skills</h2>
+    <div class="skill-ring" style="--value:70;"><div class="skill-label">HTML</div></div>
+    <div class="skill-ring" style="--value:60;"><div class="skill-label">CSS</div></div>
+    <div class="skill-ring" style="--value:80;"><div class="skill-label">JS</div></div>
+    <div class="skill-ring" style="--value:75;"><div class="skill-label">React</div></div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact-section fade-in">
+    <h2>Contact Me</h2>
+    <form class="contact-form" id="contact-form">
+      <div class="form-group">
+        <input type="text" name="name" required placeholder=" " />
+        <label>Name</label>
+      </div>
+      <div class="form-group">
+        <input type="email" name="email" required placeholder=" " />
+        <label>Email</label>
+      </div>
+      <div class="form-group">
+        <textarea name="message" rows="5" required placeholder=" "></textarea>
+        <label>Message</label>
+      </div>
+      <button type="submit" class="send-button">Send</button>
+      <div id="thank-you" class="thank-you">Thanks for reaching out!</div>
+    </form>
+  </section>
+
+  <!-- Blog Section -->
+  <section id="blog" class="fade-in">
+    <h2>Blog</h2>
+    <div class="blog-grid">
+      <div class="blog-card">
+        <img src="https://via.placeholder.com/400x200 " alt="Blog Post 1" />
+        <div class="blog-overlay"></div>
+        <div class="blog-title">Responsive Design Tips</div>
+      </div>
+      <div class="blog-card">
+        <img src="https://via.placeholder.com/400x200 " alt="Blog Post 2" />
+        <div class="blog-overlay"></div>
+        <div class="blog-title">Next.js vs Nuxt.js</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-github"></i></a>
+      <a href="#"><i class="fab fa-linkedin"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+    </div>
+    <p>&copy; 2025 Alex. All rights reserved.</p>
+  </footer>
+
+  <!-- Particles.js Init -->
+  <script>
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 80 },
+        color: "#ffffff",
+        shape: "circle",
+        opacity: 0.5,
+        size: { value: 3 },
+        line_linked: { enable: true, distance: 150 }
+      }
+    });
+  </script>
+
+  <!-- Main JS -->
+  <script>
+    // Theme Toggle
+    function toggleTheme() {
+      document.body.classList.toggle('dark-theme');
+      const icon = document.querySelector('.theme-toggle');
+      icon.textContent = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+      localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+    }
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      document.querySelector('.theme-toggle').textContent = '☀️';
+    }
+
+    // Scroll Spy
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Project Filter
+    function filterProjects(category) {
+      const cards = document.querySelectorAll('.project-card');
+      cards.forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      document.querySelectorAll('.filter-buttons button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // Form Submission
+    const form = document.getElementById('contact-form');
+    const thankYou = document.getElementById('thank-you');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.style.display = 'none';
+      thankYou.classList.add('visible');
+    });
+
+    // Scroll Animations
+    const faders = document.querySelectorAll('.fade-in');
+    const appearOnScroll = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    faders.forEach(el => appearOnScroll.observe(el));
+
+    // Custom Cursor
+    const cursor = document.querySelector('.custom-cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.top = e.clientY + 'px';
+      cursor.style.left = e.clientX + 'px';
+    });
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+  </script>
+</body>
+</html>
