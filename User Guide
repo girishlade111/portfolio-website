@@ -1,0 +1,22 @@
+To create a modern, visually striking portfolio website with the specified features, follow this structured implementation:
+
+portfolio-website/
+├── dist/               # Bundled files
+├── src/
+│   ├── ts/             # TypeScript files
+│   ├── scss/           # Sass files
+│   ├── assets/         # Images, fonts, icons
+│   └── index.html
+├── webpack.config.js
+└── package.json
+
+Enhancements :
+Dark/Light Toggle : Persist state with localStorage
+Custom Cursor : Create a div with position: fixed and sync with mouse movement
+SVG Dividers : Use inline SVGs for decorative section separators
+Lazy Loading : Add loading="lazy" to images
+Deployment :
+Optimize images with tools like TinyPNG
+Use Lighthouse for performance audits
+Deploy via Netlify/Vercel with CI/CD
+This implementation balances performance, accessibility, and visual appeal while leveraging modern web technologies. Adjust animations and layouts based on device capabilities for optimal user experience.
